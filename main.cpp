@@ -14,12 +14,20 @@ New/This/Pointers/References conclusion
          on the heap without leaking, without using smart pointers. 
  */
 
+struct A {};
 
+struct HeapA
+{
+    A* a;
+    
+    HeapA() : a(new A) {}
 
-
-
-
-
+    ~HeapA()
+    {
+        delete a;
+        a = nullptr;
+    }
+};
 
 
 
@@ -111,6 +119,7 @@ int main()
     //testing instruction 0
     HeapA heapA; 
 
+    
     //assign heap primitives
     FloatType ft ( 2.0f );
     DoubleType dt ( 2 );
@@ -182,9 +191,19 @@ int main()
 
 struct FloatType
 {
-    float add(float lhs, float rhs)
+    float* value;
+
+    FloatType( float val ) : value( new float(val) ) {}
+    ~FloatType()
     {
-        return lhs + rhs;
+        delete value;
+        value = nullptr;
+    }
+
+
+    float add(float lhs)
+    {
+        return lhs + *value;
     }
 
     float subtract(float lhs, float rhs)
@@ -205,6 +224,8 @@ struct FloatType
         return lhs / rhs;
     }
 };
+
+
 
 struct DoubleType
 {
